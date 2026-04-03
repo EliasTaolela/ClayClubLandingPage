@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Landing Page";
+}
+
+
+
+
+
+
+<!-- ─── HERO ────────────────────────────────────── -->
+
+@await Html.PartialAsync("_Hero")
+
+<!-- ─── TICKER ──────────────────────────────────── -->
+<div class="ticker">
+    <div class="ticker-inner" id="tickerInner">
+        <span class="ticker-item">★ WHEEL THROWING</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">HAND BUILDING</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">GLAZING WORKSHOP</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">RAKU FIRING</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">SCULPTURAL FORMS</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">BEGINNER FRIENDLY</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">MONTHLY PLANS</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">★ WHEEL THROWING</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">HAND BUILDING</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">GLAZING WORKSHOP</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">RAKU FIRING</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">SCULPTURAL FORMS</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">BEGINNER FRIENDLY</span>
+        <span class="ticker-sep">◆</span>
+        <span class="ticker-item">MONTHLY PLANS</span>
+        <span class="ticker-sep">◆</span>
+    </div>
+</div>
+
+<!-- ─── CLASSES ─────────────────────────────────── -->
+
+@await Html.PartialAsync("_Classes")
+
+<!-- ─── GALLERY STRIP ────────────────────────────── -->
+<div class="gallery-strip">
+    <div class="gallery-strip-inner" id="galleryStrip">
+        <img src="https://cdn.cosmos.so/4f9a0bed-a4b7-4508-b1af-dfa930f54e68?format=jpeg" alt="">
+        <img src="https://cdn.cosmos.so/c02db2f8-8d2a-4b5d-b7b2-cfa8722736ea?format=jpeg" alt="">
+        <img src="https://cdn.cosmos.so/029154c0-f369-469e-92bf-47fea484e453?format=jpeg" alt="">
+        <img src="https://cdn.cosmos.so/1fd814d0-a3ff-491e-b5ff-563b86f74b81?format=jpeg" alt="">
+        <img src="https://cdn.cosmos.so/a9287251-d4fd-4037-9497-313e736e2843?format=jpeg" alt="">
+        <img src="https://cdn.cosmos.so/4b1457d9-bb71-46bc-995b-a51cc115a57c?format=jpeg" alt="">
+    </div>
+    <p class="gallery-caption">✦ Studio Life — Real Students, Real Clay</p>
+</div>
+
+<!-- ─── VIBES ─────────────────────────────────────── -->
+<section class="section-vibes grainy" id="vibes">
+    <div class="ghost-bg" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(6rem,16vw,14rem);opacity:0.06;">MAKE</div>
+    <div class="vibes-grid">
+        <div class="vibes-text">
+            <p class="section-label">◉ The Space</p>
+            <h2 class="section-title">SLOW DOWN.<br>MAKE <span class="accent">THINGS.</span></h2>
+            <p>Clay Club is a studio for people who want to make real things with their hands. No screens. No notifications. Just you, a lump of clay, and the meditative hum of the wheel.</p>
+            <p>We're a community of potters, hobbyists, artists, and curious beginners — all united by the same slightly addictive urge to throw pots at 7pm on a Tuesday.</p>
+            <div class="hero-actions" style="margin-top:2rem;">
+                <a href="#subscribe" class="btn-primary" style="background:var(--clay);border-color:var(--clay);">Join the Studio →</a>
+            </div>
+        </div>
+        <div class="vibes-stats">
+            <div class="stat-box grainy">
+                <div class="stat-num">500<span class="unit">+</span></div>
+                <div class="stat-label">Students</div>
+            </div>
+            <div class="stat-box grainy">
+                <div class="stat-num">12</div>
+                <div class="stat-label">Classes / week</div>
+            </div>
+            <div class="stat-box grainy">
+                <div class="stat-num">3</div>
+                <div class="stat-label">Studio Kilns</div>
+            </div>
+            <div class="stat-box grainy">
+                <div class="stat-num">∞</div>
+                <div class="stat-label">Good vibes only</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── SUBSCRIBE ─────────────────────────────────── -->
+<section class="section-subscribe grainy" id="subscribe">
+    <div class="ghost-bg" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(6rem,16vw,15rem);opacity:0.05;">JOIN</div>
+    <div class="subscribe-inner">
+        <p class="section-label" style="margin-bottom:1rem;">✦ Stay in the Loop</p>
+        <h2 class="section-title">
+            SUBSCRIBE<br><span style="-webkit-text-stroke:3px var(--ink);color:transparent;">TO POTTERY</span>
+        </h2>
+        <p>Drop your email and we'll send you class schedules, new workshop alerts, kiln sale events, and the occasional deeply philosophical thought about mud.</p>
+
+        <div class="subscribe-tags">
+            <span class="tag-chip">★ Weekly Classes</span>
+            <span class="tag-chip">◆ New Workshops</span>
+            <span class="tag-chip">🔥 Kiln Events</span>
+            <span class="tag-chip">∞ Open Studio</span>
+        </div>
+
+        <div class="subscribe-form" id="subForm">
+            <input type="email" id="emailInput" placeholder="your@email.com" autocomplete="off">
+            <button type="button" id="subBtn">Get Clay'd Up →</button>
+        </div>
+        <div class="success-msg" id="successMsg">
+            ✦ You're in! Check your inbox. Welcome to the club. 🏺
+        </div>
+        <p class="subscribe-note">// No spam. Unsubscribe whenever. We respect your inbox like we respect the clay.</p>
+    </div>
+</section>
+
+<!-- ─── FOOTER ───────────────────────────────────── -->
+
+@await Html.PartialAsync("_Footer")

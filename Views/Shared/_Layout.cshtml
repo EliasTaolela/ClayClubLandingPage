@@ -1,0 +1,81 @@
+﻿@await Html.PartialAsync("_Navbar")
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CLAY CLUB</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/LandingPage.styles.css" asp-append-version="true" />
+</head>
+<body>
+
+    
+
+<nav>
+        <div class="nav-logo">Elias Taolela<span>★</span>CLUB</div>
+        <div class="nav-links">
+            <a href="#classes">Classes</a>
+            <a href="#vibes">About</a>
+            <a href="#subscribe">Subscribe</a>
+        </div>
+        
+        <div class="auth-buttons">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <a href="/" class="btn-ghost">Home</a>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a href="/Admin" class="btn-ghost">Admin</a>
+                }
+
+
+                <span>Hello @UserManager.GetUserName(User) 👋</span>
+
+                <form asp-area="Identity" asp-page="/Account/Logout" method="post" style="display:inline;">
+                    <button type="submit" class="btn-ghost">Logout</button>
+                </form>
+            }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Login" class="nav-cta">Login</a>
+                <a asp-area="Identity" asp-page="/Account/Register" class="nav-cta">Register</a>
+            }
+        </div>
+        <button class="nav-cta"
+                onclick="document.getElementById('subscribe').scrollIntoView({behavior:'smooth'})">
+            ✦ Join Now
+        </button>
+    </nav>
+    
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+            window.addEventListener("scroll", function () {
+                const nav = document.getElementById("mainNav");
+
+                if (window.scrollY > 50) {
+                    nav.classList.add("scrolled");
+                } else {
+                    nav.classList.remove("scrolled");
+                }
+            });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

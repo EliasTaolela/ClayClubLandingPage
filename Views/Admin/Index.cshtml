@@ -1,0 +1,119 @@
+﻿@model List<(LandingPage.Models.ApplicationUser User, IList<string> Roles)>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Admin Dashboard";
+    
+}
+
+
+<section class="section-classes grainy" style="padding:3rem;">
+
+    <div class="section-header">
+        <div>
+            <p class="section-label">👑 Admin Panel</p>
+            <h2 class="section-title">MANAGE <span class="accent">USERS</span></h2>
+        </div>
+    </div>
+
+    <div class="classes-grid">
+
+        @foreach (var item in Model)
+        {
+            var user = item.User;
+            var roles = item.Roles;
+
+            <div class="class-card grainy">
+
+                <span class="class-icon">👤</span>
+
+                <h3 class="class-name">@user.Email</h3>
+
+                <p class="class-desc">
+                    Username: @user.UserName
+                </p>
+
+                <!-- 🔥 ROLE DISPLAY -->
+                <p style="margin-top:0.5rem;">
+                    Role:
+                    @if (roles.Contains("Admin"))
+                    {
+                        <span style="color:gold;">👑 Admin</span>
+                    }
+                    else
+                    {
+                        <span>User</span>
+                    }
+                </p>
+
+                <!-- 🔥 ACTION BUTTONS -->
+                <div class="hero-actions" style="margin-top:1rem;flex-wrap:wrap;gap:0.5rem;">
+
+                    <!-- DELETE (opens modal) -->
+                    <button class="btn-ghost" style="color:red;"
+                            onclick="openModal('@user.Id')">
+                        Delete
+                    </button>
+
+                    <!-- MAKE ADMIN -->
+                    @if (!roles.Contains("Admin"))
+                    {
+                        <form asp-action="MakeAdmin" method="post">
+                            <input type="hidden" name="id" value="@user.Id" />
+                            <button class="btn-primary">Make Admin</button>
+                        </form>
+                    }
+
+                    <!-- VIEW DATA -->
+                    <a asp-action="UserData" asp-route-id="@user.Id" class="btn-ghost">
+                        View Data →
+                    </a>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+    <!-- 🔥 SINGLE MODAL (OUTSIDE LOOP) -->
+    <div id="deleteModal" class="modal-overlay">
+        <div class="modal-box grainy">
+            <h2>⚠️ Delete User</h2>
+            <p>Are you sure you want to delete this user?</p>
+
+            <div class="hero-actions" style="margin-top:1.5rem;">
+                <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+
+                <form method="post" asp-action="DeleteUser">
+                    <input type="hidden" name="id" id="deleteUserId" />
+                    <button class="btn-primary" style="background:red;border-color:red;">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@section Scripts {
+    <script>
+        function openModal(userId) {
+            document.getElementById("deleteModal").style.display = "flex";
+            document.getElementById("deleteUserId").value = userId;
+        }
+
+        function closeModal() {
+            document.getElementById("deleteModal").style.display = "none";
+        }
+
+        // Close when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById("deleteModal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+}   

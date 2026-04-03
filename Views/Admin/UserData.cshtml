@@ -1,0 +1,12 @@
+﻿@model List<LandingPage.Models.Subscriber>
+
+<h2>User Data</h2>
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>@item.Email</li>
+    }
+</ul>
+
+<a href="/Admin">← Back</a>

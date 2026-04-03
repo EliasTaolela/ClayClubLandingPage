@@ -1,0 +1,41 @@
+﻿@page
+@model RegisterModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<section class="section-subscribe grainy" style="min-height:100vh;display:flex;align-items:center;justify-content:center;">
+    <div class="subscribe-inner" style="max-width:400px;width:100%;">
+
+        <h2 class="section-title">JOIN CLAY CLUB</h2>
+        <p>Create your account and start building.</p>
+
+        <form method="post">
+            <div class="subscribe-form">
+                <input asp-for="Input.Email" placeholder="Email" />
+            </div>
+
+            <div class="subscribe-form">
+                <input asp-for="Input.Password" type="password" placeholder="Password" />
+            </div>
+
+            <div class="subscribe-form">
+                <input asp-for="Input.ConfirmPassword" type="password" placeholder="Confirm Password" />
+            </div>
+
+            <button type="submit" class="btn-primary" style="width:100%;">
+                Register
+            </button>
+        </form>
+
+        <div style="margin-top:1rem;">
+            <a asp-page="./Login">Already have an account? Login →</a>
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
