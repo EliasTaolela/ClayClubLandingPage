@@ -46,16 +46,6 @@ It is built to demonstrate how a simple landing page can evolve into a **fully f
 - JavaScript (Intersection Observer)
 - CSS (custom styling)
 
----
 
-## 🚀 Getting Started (Run Locally)
 
-Follow these steps to run the project on your machine.
 
----
-
-### 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/ClayClubLandingPage.git
-cd ClayClubLandingPage
