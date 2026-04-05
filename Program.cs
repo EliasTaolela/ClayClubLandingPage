@@ -46,7 +46,7 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        var db = services.GetRequiredService<AppDbContext>();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await db.Database.MigrateAsync();
 
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
