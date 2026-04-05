@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // ✅ DATABASE
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sql => sql.EnableRetryOnFailure()
     ));
 
 // ✅ IDENTITY + ROLES
@@ -38,55 +40,68 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
-
-// ✅ SEED ROLES + ADMIN USER
-using (var scope = app.Services.CreateScope())
+try
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-    string[] roles = { "Admin", "User" };
-
-    // 🔥 1. CREATE ROLES FIRST
-    foreach (var role in roles)
+    using (var scope = app.Services.CreateScope())
     {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
-    }
-
-    // 🔥 2. CREATE ADMIN USER
-    string adminEmail = "admin@clay.com";
-    string adminPassword = "Admin123!";
-
-    var user = await userManager.FindByEmailAsync(adminEmail);
-
-    if (user == null)
-    {
-        var newUser = new ApplicationUser
-        {
-            UserName = adminEmail,
-            Email = adminEmail,
-            EmailConfirmed = true
-        };
-
-        var result = await userManager.CreateAsync(newUser, adminPassword);
-
-        if (result.Succeeded)
-        {
-            await userManager.AddToRoleAsync(newUser, "Admin");
-        }
-    }
-    else
-    {
-        // 🔥 Ensure user is Admin (safe re-run)
-        if (!await userManager.IsInRoleAsync(user, "Admin"))
-        {
-            await userManager.AddToRoleAsync(user, "Admin");
-        }
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.Migrate();
     }
 }
+catch (Exception ex)
+{
+    Console.WriteLine("Migration failed: " + ex.Message);
+}
+
+
+// ✅ SEED ROLES + ADMIN USER
+//using (var scope = app.Services.CreateScope())
+//{
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+//    string[] roles = { "Admin", "User" };
+
+//    // 🔥 1. CREATE ROLES FIRST
+//    foreach (var role in roles)
+//    {
+//        if (!await roleManager.RoleExistsAsync(role))
+//        {
+//            await roleManager.CreateAsync(new IdentityRole(role));
+//        }
+//    }
+
+//    // 🔥 2. CREATE ADMIN USER
+//    string adminEmail = "admin@clay.com";
+//    string adminPassword = "Admin123!";
+
+//    var user = await userManager.FindByEmailAsync(adminEmail);
+
+//    if (user == null)
+//    {
+//        var newUser = new ApplicationUser
+//        {
+//            UserName = adminEmail,
+//            Email = adminEmail,
+//            EmailConfirmed = true
+//        };
+
+//        var result = await userManager.CreateAsync(newUser, adminPassword);
+
+//        if (result.Succeeded)
+//        {
+//            await userManager.AddToRoleAsync(newUser, "Admin");
+//        }
+//    }
+//    else
+//    {
+//        // 🔥 Ensure user is Admin (safe re-run)
+//        if (!await userManager.IsInRoleAsync(user, "Admin"))
+//        {
+//            await userManager.AddToRoleAsync(user, "Admin");
+//        }
+//    }
+//}
 
 
 // ✅ PIPELINE
