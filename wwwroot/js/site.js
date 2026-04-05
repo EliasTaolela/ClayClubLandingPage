@@ -1,7 +1,7 @@
 ﻿// ─── GLOBAL VARIABLES ─────────────────────────
 const nav = document.querySelector("nav");
 const cols = document.querySelectorAll(".parallax-col");
-const gallery = document.getElementById("galleryStrip");
+const gallery = document.querySelector(".gallery-strip__inner");
 const gallerySection = document.querySelector(".gallery-strip");
 let isDown = false, startX = 0, scrollLeft = 0;
 let ticking = false;
@@ -10,7 +10,6 @@ let ticking = false;
 window.addEventListener("scroll", () => {
     nav.classList.toggle("scrolled", window.scrollY > 50);
 
-    // Start unified scroll loop
     if (!ticking) {
         requestAnimationFrame(scrollLoop);
         ticking = true;
@@ -21,8 +20,9 @@ window.addEventListener("scroll", () => {
 function scrollLoop() {
     const scrollY = window.scrollY;
 
-    // ─ HERO PARALLAX ─
-    const heroH = document.querySelector(".hero")?.offsetHeight || 0;
+    // HERO PARALLAX
+    const hero = document.querySelector(".hero");
+    const heroH = hero ? hero.offsetHeight : 0;
     if (scrollY <= heroH * 1.2) {
         cols.forEach(col => {
             const speed = parseFloat(col.dataset.speed) || 0.3;
@@ -30,8 +30,8 @@ function scrollLoop() {
         });
     }
 
-    // ─ GALLERY AUTO-PARALLAX ─
-    if (gallerySection) {
+    // GALLERY AUTO-PARALLAX
+    if (gallerySection && gallery) {
         const rect = gallerySection.getBoundingClientRect();
         const center = rect.top + rect.height / 2 - window.innerHeight / 2;
         gallery.style.transform = `translateX(${-center * 0.12}px)`;
@@ -41,11 +41,21 @@ function scrollLoop() {
 }
 
 // ─── TOGGLE NAV (HAMBURGER MENU) ─────────────
-function toggleNav() {
-    document.getElementById("navLinks").classList.toggle("active");
-    document.getElementById("authButtons").classList.toggle("active");
-    document.querySelector(".btn-cta").classList.toggle("active");
+function initNavToggle() {
+    const hamburger = document.querySelector(".hamburger");
+    const navLinks = document.querySelector(".nav-links");
+    const authButtons = document.querySelector(".auth-buttons");
+    const ctaButtons = document.querySelectorAll(".btn-cta");
+
+    if (!hamburger) return;
+
+    hamburger.addEventListener("click", () => {
+        navLinks?.classList.toggle("active");
+        authButtons?.classList.toggle("active");
+        ctaButtons.forEach(btn => btn.classList.toggle("active"));
+    });
 }
+initNavToggle();
 
 // ─── FADE-IN ON SCROLL ───────────────────────
 const fadeObserver = new IntersectionObserver((entries) => {
@@ -57,31 +67,37 @@ const fadeObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll(".fade-in").forEach(el => fadeObserver.observe(el));
 
 // ─── GALLERY DRAG SCROLL ────────────────────
-gallery.addEventListener("mousedown", (e) => {
-    isDown = true;
-    startX = e.pageX - gallery.offsetLeft;
-    scrollLeft = gallery.parentElement.scrollLeft;
-    gallery.style.cursor = "grabbing";
-});
-window.addEventListener("mouseup", () => {
-    isDown = false;
-    gallery.style.cursor = "crosshair";
-});
-gallery.addEventListener("mousemove", (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - gallery.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    gallery.parentElement.scrollLeft = scrollLeft - walk;
-});
+if (gallery) {
+    gallery.addEventListener("mousedown", (e) => {
+        isDown = true;
+        startX = e.pageX - gallery.offsetLeft;
+        scrollLeft = gallery.parentElement.scrollLeft;
+        gallery.style.cursor = "grabbing";
+    });
+
+    window.addEventListener("mouseup", () => {
+        isDown = false;
+        gallery.style.cursor = "grab";
+    });
+
+    gallery.addEventListener("mousemove", (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - gallery.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        gallery.parentElement.scrollLeft = scrollLeft - walk;
+    });
+}
 
 // ─── SUBSCRIBE FORM ─────────────────────────
-const subBtn = document.getElementById("subBtn");
-const emailInput = document.getElementById("emailInput");
+const subForm = document.querySelector(".subscribe-form");
+const subBtn = subForm?.querySelector(".sub-btn");
+const emailInput = subForm?.querySelector(".email-input");
+const successMsg = document.querySelector(".success-msg");
 
-subBtn.addEventListener("click", () => {
+subBtn?.addEventListener("click", () => {
     const email = emailInput.value.trim();
-    if (!email || !email.includes("@")) {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         emailInput.style.borderColor = "#B05C52";
         emailInput.style.background = "#FDF0EB";
         setTimeout(() => {
@@ -99,13 +115,13 @@ subBtn.addEventListener("click", () => {
         .then(res => res.text())
         .then(data => {
             alert(data);
-            document.getElementById("subForm").style.display = "none";
-            document.getElementById("successMsg").style.display = "block";
+            subForm.style.display = "none";
+            successMsg.style.display = "block";
         })
         .catch(err => console.error(err));
 });
 
-emailInput.addEventListener("keydown", (e) => {
+emailInput?.addEventListener("keydown", (e) => {
     if (e.key === "Enter") subBtn.click();
 });
 
