@@ -40,17 +40,56 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
-try
+using (var scope = app.Services.CreateScope())
 {
-    using (var scope = app.Services.CreateScope())
+    var services = scope.ServiceProvider;
+
+    try
     {
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.Migrate();
+        var db = services.GetRequiredService<AppDbContext>();
+        await db.Database.MigrateAsync();
+
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+        // Roles
+        string[] roles = { "Admin", "User" };
+
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        // Admin user
+        string adminEmail = "admin@clay.com";
+        string adminPassword = "Admin123!";
+
+        var user = await userManager.FindByEmailAsync(adminEmail);
+
+        if (user == null)
+        {
+            var newUser = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                EmailConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(newUser, adminPassword);
+
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(newUser, "Admin");
+            }
+        }
     }
-}
-catch (Exception ex)
-{
-    Console.WriteLine("Migration failed: " + ex.Message);
+    catch (Exception ex)
+    {
+        Console.WriteLine("Seeding error: " + ex.Message);
+    }
 }
 
 
